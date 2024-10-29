@@ -3,7 +3,6 @@ package com.estudos.curso.entities;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
-import java.util.Set;
 
 import com.estudos.curso.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -24,7 +23,7 @@ public class Order implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long Id;
+	private Long id;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM,dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant moment;
@@ -41,18 +40,18 @@ public class Order implements Serializable{
 
 	public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
 		super();
-		Id = id;
+		this.id = id;
 		this.moment = moment;
 		setOrderStatus(orderStatus);
 		this.client = client;
 	}
 	
 	public Long getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(Long id) {
-		Id = id;
+		this.id = id;
 	}
 
 	public Instant getMoment() {
@@ -84,12 +83,12 @@ public class Order implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Order [Id=" + Id + ", moment=" + moment + "]";
+		return "Order [Id=" + id + ", moment=" + moment + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(Id);
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -101,6 +100,6 @@ public class Order implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Order other = (Order) obj;
-		return Objects.equals(Id, other.Id);
+		return Objects.equals(id, other.id);
 	}	
 }
