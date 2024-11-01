@@ -2,7 +2,9 @@ package com.estudos.curso.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.estudos.curso.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -13,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -33,6 +36,9 @@ public class Order implements Serializable{
 	@ManyToOne   // Relacionamento de Order com User é Muitos para um, ou seja, um user pode ter N orders
 	@JoinColumn(name = "client_id") // Criação da chave estrangeira na tabela User
 	private User client;
+	
+	@OneToMany(mappedBy = "id.order")
+	private Set<OrderItem> items = new HashSet<>(); // HashSet é uma lista que não permite valores iguais
 
 	public Order() {
 		
@@ -81,6 +87,13 @@ public class Order implements Serializable{
 		this.client = client;
 	}
 
+	/* Na coleção Set(pode confundir, esse Set é uma função para não permitir duplicados), são retornados os items preenchidos
+	   pela lista Set */
+	public Set<OrderItem> getItems(){ 
+		
+		return items;
+	}
+	
 	@Override
 	public String toString() {
 		return "Order [Id=" + id + ", moment=" + moment + "]";
