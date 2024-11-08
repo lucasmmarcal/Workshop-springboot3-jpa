@@ -31,6 +31,7 @@ private static final long serialVersionUID = 1L;
 		this.price = price;
 	}
 	
+	@JsonIgnore
 	public Order getOrder() {
 		
 		return id.getOrder();
@@ -41,7 +42,7 @@ private static final long serialVersionUID = 1L;
 		id.setOrder(order);
 	}
 	
-	@JsonIgnore
+	//@JsonIgnore
 	public Order getProduct() {
 		
 		return id.getOrder();

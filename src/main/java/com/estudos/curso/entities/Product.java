@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -41,6 +42,10 @@ public class Product implements Serializable {
 	joinColumns = @JoinColumn(name = "product_id"), // Chave estrangeira do Product 
 	inverseJoinColumns = @JoinColumn(name = "category_id")) // InverseJoinColumns cria a chave estrangeira da category
 	private Set<Category> categories = new HashSet<>();
+
+	@OneToMany(mappedBy = "id.product ") // Pega o id da classe OrdemItem
+	                                     // e acessa o product na classe OrdemItemPK 
+	private Set<OrderItem> items = new HashSet<>(); // Recebe uma lista não repetida de OrdemItem
 
 	public Product() {
 	}
@@ -98,6 +103,18 @@ public class Product implements Serializable {
 		return categories;
 	}
 
+	// Retorna items do tipo OrdemItem, ou seja, uma lista de OrderItem não repetida
+	@JsonIgnore
+	public Set<Order> getOrders() {
+		Set<Order> set = new HashSet<>();
+		for(OrderItem x: items) {
+			
+			set.add(x.getOrder());
+		}
+		return set;
+	}
+	
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
