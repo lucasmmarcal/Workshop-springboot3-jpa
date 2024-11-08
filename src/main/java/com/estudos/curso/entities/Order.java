@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -27,19 +28,26 @@ public class Order implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM,dd'T'HH:mm:ss'Z'", timezone = "GMT")
-	private Instant moment;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+	private Instant moment;
+	
 	private Integer orderStatus;
 	
-	@ManyToOne   // Relacionamento de Order com User é Muitos para um, ou seja, um user pode ter N orders
-	@JoinColumn(name = "client_id") // Criação da chave estrangeira na tabela User
+	// Relacionamento de Order com User é Muitos para um, ou seja, um user pode ter N orders
+	@ManyToOne  
+	// Criação da chave estrangeira na tabela User
+	@JoinColumn(name = "client_id") 
 	private User client;
-	
+
+	// id.order, em OrdemItem existe o id e o id que tem o Order, chave de OrderItemPk
 	@OneToMany(mappedBy = "id.order")
 	private Set<OrderItem> items = new HashSet<>(); // HashSet é uma lista que não permite valores iguais
 
+	// Para a notação @OneToOne é necessário o mapeamento com Cascade, onde uma chave deve ser igual em Order e Payment
+	@OneToOne(mappedBy = "order", cascade = jakarta.persistence.CascadeType.ALL)
+	private Payment payment;
+	
 	public Order() {
 		
 	}
@@ -86,12 +94,29 @@ public class Order implements Serializable{
 	public void setClient(User client) {
 		this.client = client;
 	}
+	
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
 
 	/* Na coleção Set(pode confundir, esse Set é uma função para não permitir duplicados), são retornados os items preenchidos
 	   pela lista Set */
 	public Set<OrderItem> getItems(){ 
 		
 		return items;
+	}
+	
+	public Double getTotal() {
+		double sum = 0.0;
+		for(OrderItem x: items) {
+			sum += x.getSubTotal();
+		}
+		
+		return sum;
 	}
 	
 	@Override

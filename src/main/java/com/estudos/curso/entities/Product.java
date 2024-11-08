@@ -43,8 +43,9 @@ public class Product implements Serializable {
 	inverseJoinColumns = @JoinColumn(name = "category_id")) // InverseJoinColumns cria a chave estrangeira da category
 	private Set<Category> categories = new HashSet<>();
 
-	@OneToMany(mappedBy = "id.product ") // Pega o id da classe OrdemItem
-	                                     // e acessa o product na classe OrdemItemPK 
+	@OneToMany(mappedBy = "id.product")
+	// Pega o id da classe OrdemItem
+    // e acessa o product na classe OrdemItemPK 
 	private Set<OrderItem> items = new HashSet<>(); // Recebe uma lista não repetida de OrdemItem
 
 	public Product() {
