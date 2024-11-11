@@ -3,6 +3,7 @@ package com.estudos.curso.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.catalina.startup.ClassLoaderFactory.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,22 @@ public class UserService {
 	public void delete(Long id) {
 		
 		userRepository.deleteById(id);
+		
+	}
+	
+	public User update(Long id, User obj) {
+		
+	 // Preparar o id para ser atualizado com a função getReferenceById(id)
+		User entity = userRepository.getReferenceById(id);
+		updateData(obj,entity);
+		return userRepository.save(entity);
+	}
+
+	private void updateData(User entity, User obj) {
+		
+		entity.setEmail(obj.getEmail());
+		entity.setName(obj.getName());
+		entity.setPhone(obj.getPhone());
 		
 	}
 }
